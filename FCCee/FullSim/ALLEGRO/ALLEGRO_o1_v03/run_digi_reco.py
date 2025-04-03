@@ -15,14 +15,14 @@ from GaudiKernel.PhysicalConstants import pi
 #
 
 # - default settings, that can be overridden via CLI
-inputfile = "ALLEGRO_sim.root"             # input file produced with ddsim - can be overridden with IOSvc.Input
+inputfile = "https://fccsw.web.cern.ch/fccsw/filesForSimDigiReco/ALLEGRO/ALLEGRO_o1_v03/forTests/pythia_ee_z_qq_10evt_ALLEGRO_sim.root"             # input file produced with ddsim - can be overridden with IOSvc.Input
 outputfile = "ALLEGRO_sim_digi_reco.root"  # output file produced by this steering file - can be overridden with IOSvc.Output
-Nevts = -1                                 # -1 means all events in input file (can be overridden with -n or --num-events option of k4run
+Nevts = 5                                 # -1 means all events in input file (can be overridden with -n or --num-events option of k4run
 
 # - general settings not set via CLI
-filterNoiseThreshold = -1                  # if addNoise is true, and filterNoiseThreshold is >0, will filter away cells with abs(energy) below filterNoiseThreshold * expected sigma(noise)
+filterNoiseThreshold = 1                  # if addNoise is true, and filterNoiseThreshold is >0, will filter away cells with abs(energy) below filterNoiseThreshold * expected sigma(noise)
 # dataFolder = "data/"                     # directory containing the calibration files
-dataFolder = "./"                          # directory containing the calibration files
+dataFolder = "https://fccsw.web.cern.ch/fccsw/filesForSimDigiReco/ALLEGRO/ALLEGRO_o1_v03/"                          # directory containing the calibration files
 
 # - general settings set via CLI
 from k4FWCore.parseArgs import parser
@@ -40,7 +40,7 @@ parser.add_argument("--trkdigi", action="store_true", help="Digitise tracker hit
 opts = parser.parse_known_args()[0]
 runHCal = opts.includeHCal                # if false, it will produce only ECAL clusters. if true, it will also produce ECAL+HCAL clusters
 runMuon = opts.includeMuon                # if false, it will not digitise muon hits
-addNoise = opts.addNoise                  # add noise or not to the cell energy
+addNoise = True #opts.addNoise                  # add noise or not to the cell energy
 addCrosstalk = opts.addCrosstalk          # switch on/off the crosstalk
 addTracks = opts.addTracks                # add tracks or not
 digitiseTrackerHits = opts.trkdigi        # digitise tracker hits (smear truth)
@@ -61,14 +61,14 @@ saveCells = opts.saveCells
 saveClusterCells = True
 
 dropLumiCalHits = True
-# dropVertexHits = True
-# dropDCHHits = True
-# dropSiWrHits = True
-# dropMuonHits = True
-dropVertexHits = False
-dropDCHHits = False
-dropSiWrHits = False
-dropMuonHits = False
+dropVertexHits = True
+dropDCHHits = True
+dropSiWrHits = True
+dropMuonHits = True
+# dropVertexHits = False
+# dropDCHHits = False
+# dropSiWrHits = False
+# dropMuonHits = False
 
 
 # ECAL barrel parameters for digitisation
@@ -483,7 +483,7 @@ createEcalEndcapCells = CreatePositionedCaloCells("CreatePositionedECalEndcapCel
                                                   hits=ecalEndcapReadoutName,
                                                   cells=ecalEndcapPositionedCellsName,
                                                   links=ecalEndcapLinks)
-TopAlg += [createEcalEndcapCells]
+#TopAlg += [createEcalEndcapCells]
 
 if addNoise:
     # cells with noise not filtered
@@ -944,16 +944,16 @@ if doSWClustering:
                     runPhotonIDTool)
 
     # SW ECAL endcap clusters
-    EMECCaloClusterInputs = {"ecalEndcap": ecalEndcapPositionedCellsName}
-    EMECCaloClusterReadouts = {"ecalEndcap": ecalEndcapReadoutName}
-    setupSWClusters(EMECCaloClusterInputs,
-                    EMECCaloClusterReadouts,
-                    "EMECCaloClusters",
-                    0.04,
-                    False,
-                    False,
-                    False,
-                    False)
+    #EMECCaloClusterInputs = {"ecalEndcap": ecalEndcapPositionedCellsName}
+    #EMECCaloClusterReadouts = {"ecalEndcap": ecalEndcapReadoutName}
+    #setupSWClusters(EMECCaloClusterInputs,
+    #                EMECCaloClusterReadouts,
+    #                "EMECCaloClusters",
+    #                0.04,
+    #                False,
+    #                False,
+    #                False,
+    #                False)
 
     # SW ECAL barrel clusters with noise
     if addNoise:
@@ -1006,18 +1006,18 @@ if doTopoClustering:
                       runPhotonIDTool)
 
     # ECAL endcap topoclusters
-    EMECCaloTopoClusterInputs = {"ecalEndcap": ecalEndcapPositionedCellsName}
-    EMECCaloTopoClusterReadouts = {"ecalEndcap": ecalEndcapReadoutName}
-    setupTopoClusters(EMECCaloTopoClusterInputs,
-                      EMECCaloTopoClusterReadouts,
-                      "EMECCaloTopoClusters",
-                      0.0,
-                      dataFolder + "neighbours_map_ecalE_turbine.root",
-                      dataFolder + "cellNoise_map_endcapTurbine_electronicsNoiseLevel.root",
-                      False,
-                      False,
-                      False,
-                      False)
+    #EMECCaloTopoClusterInputs = {"ecalEndcap": ecalEndcapPositionedCellsName}
+    #EMECCaloTopoClusterReadouts = {"ecalEndcap": ecalEndcapReadoutName}
+    #setupTopoClusters(EMECCaloTopoClusterInputs,
+    #                  EMECCaloTopoClusterReadouts,
+    #                  "EMECCaloTopoClusters",
+    #                  0.0,
+    #                  dataFolder + "neighbours_map_ecalE_turbine.root",
+    #                  dataFolder + "cellNoise_map_endcapTurbine_electronicsNoiseLevel.root",
+    #                  False,
+    #                  False,
+    #                  False,
+    #                  False)
 
     # ECAL topoclusters with noise
     if addNoise:
